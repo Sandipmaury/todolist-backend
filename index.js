@@ -9,11 +9,11 @@ const PORT = process.env.PORT;
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 app.use("/user", userRouter);
 
 // gaurd middleware for checking is user validated or not
-app.use("/", gaurdMiddleware);
 
 // server is runnig
 app.listen(PORT, async () => {

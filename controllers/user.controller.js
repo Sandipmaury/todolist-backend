@@ -1,27 +1,11 @@
-import { UserModel } from "../models/userSchema/user.model.js";
 import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
 import dotenv from "dotenv";
+import { UserModel } from "../models/user.model.js";
 dotenv.config();
 
 export const getUser = async (req, res) => {
-  const token = req.headers?.authorization?.split(" ")[1];
-
-  if (!token || token === "undefined" || token === "null") {
-    return res.status(404).json({ success: false, message: "please login" });
-  }
-
-  let userId;
-  try {
-    const user = jsonwebtoken.verify(token, process.env.SECRET_KEY);
-    userId = user.userId;
-    if (!userId) {
-      return res.status(404).json({ success: false, error: err.message });
-    }
-  } catch (err) {
-    return res.status(404).json({ success: false, error: err.message });
-  }
-
+  const { userId } = req.body;
   try {
     const user = await UserModel.findById(userId);
     return res.status(200).json({
@@ -30,11 +14,10 @@ export const getUser = async (req, res) => {
         userId: user._id,
         username: user.username,
         email: user.email,
-        token: token,
       },
     });
   } catch (err) {
-    return res.status(404).json({ success: false, error: err.message });
+    return res.status(408).json({ success: false, message: err.message });
   }
 };
 
@@ -42,7 +25,7 @@ export const registerUser = async (req, res) => {
   const user = req.body;
 
   // checking user already present or not
-  const checkEmail = await UserModel.findOne({ email: user.email });
+  const checkEmail = await UserModel.findOne({ email: user?.email });
   if (checkEmail) {
     return res.status(403).json({
       success: false,
@@ -52,9 +35,9 @@ export const registerUser = async (req, res) => {
 
   // creating hash password
   try {
-    user.password = await bcrypt.hash(user.password, 5);
+    user.password = await bcrypt.hash(user?.password, 5);
   } catch (err) {
-    return res.status(500).json({ success: false, error: err.message });
+    return res.status(500).json({ success: false, message: err.message });
   }
 
   // creating new user
@@ -62,30 +45,30 @@ export const registerUser = async (req, res) => {
   try {
     await newUser.save();
   } catch (err) {
-    return res.status(500).json({ success: false, error: err.message });
+    return res.status(500).json({ success: false, message: err.message });
   }
 
   // creating token
   let token;
   try {
     token = jsonwebtoken.sign(
-      { userId: newUser._id, email: user.email },
+      { userId: newUser._id, email: user?.email },
       process.env.SECRET_KEY,
       {
         expiresIn: "10h",
       }
     );
   } catch (err) {
-    return res.status(500).json({ success: false, error: err.message });
+    return res.status(500).json({ success: false, message: err.message });
   }
   return res.status(200).json({
     success: true,
     data: {
-      userId: newUser._id,
-      username: newUser.username,
-      email: newUser.email,
-      token: token,
+      userId: newUser?._id,
+      username: newUser?.username,
+      email: newUser?.email,
     },
+    token: token,
   });
 };
 
@@ -93,7 +76,7 @@ export const loginUser = async (req, res) => {
   const user = req.body;
 
   // checking user is valid or not
-  const checkUser = await UserModel.findOne({ email: user.email });
+  const checkUser = await UserModel.findOne({ email: user?.email });
   if (!checkUser) {
     return res.status(404).json({
       success: false,
@@ -113,22 +96,22 @@ export const loginUser = async (req, res) => {
   let token;
   try {
     token = jsonwebtoken.sign(
-      { userId: checkUser._id, email: user.email },
+      { userId: checkUser._id, email: user?.email },
       process.env.SECRET_KEY,
       {
         expiresIn: "10h",
       }
     );
   } catch (err) {
-    return res.status(500).json({ success: false, error: err.message });
+    return res.status(500).json({ success: false, message: err.message });
   }
   return res.status(200).json({
     success: true,
     data: {
-      userId: checkUser._id,
-      username: checkUser.username,
-      email: checkUser.email,
-      token: token,
+      userId: checkUser?._id,
+      username: checkUser?.username,
+      email: checkUser?.email,
     },
+    token: token,
   });
 };
