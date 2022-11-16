@@ -7,7 +7,7 @@ export const createProject = async (req, res) => {
     project = await newProject.save();
     return res.status(200).json({
       success: true,
-      message: "You have create new project.",
+      message: "You have created new project.",
       data: project,
     });
   } catch (err) {

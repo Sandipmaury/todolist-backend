@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { gaurdMiddleware } from "./middleware/gaurd.middleware.js";
 import { userRouter } from "./routes/user.route.js";
 import { projectRouter } from "./routes/project.route.js";
+import { taskRouter } from "./routes/task.route.js";
 dotenv.config();
 const PORT = process.env.PORT;
 
@@ -16,6 +17,7 @@ app.use("/user", userRouter);
 
 // gaurd middleware for checking is user validated or not
 app.use("/projects", gaurdMiddleware, projectRouter);
+app.use("/tasks", gaurdMiddleware, taskRouter);
 // server is runnig
 app.listen(PORT, async () => {
   try {
