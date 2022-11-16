@@ -10,6 +10,7 @@ export const getUser = async (req, res) => {
     const user = await UserModel.findById(userId);
     return res.status(200).json({
       success: true,
+      message: "Login successfull.",
       data: {
         userId: user._id,
         username: user.username,
@@ -55,7 +56,7 @@ export const registerUser = async (req, res) => {
       { userId: newUser._id, email: user?.email },
       process.env.SECRET_KEY,
       {
-        expiresIn: "10h",
+        expiresIn: "2d",
       }
     );
   } catch (err) {
@@ -63,6 +64,7 @@ export const registerUser = async (req, res) => {
   }
   return res.status(200).json({
     success: true,
+    message: "We have created your account.",
     data: {
       userId: newUser?._id,
       username: newUser?.username,
@@ -87,9 +89,10 @@ export const loginUser = async (req, res) => {
   //checking password
   const isMatched = await bcrypt.compare(user?.password, checkUser?.password);
   if (!isMatched) {
-    return res
-      .status(404)
-      .json({ success: false, message: "We've got invalid email or password" });
+    return res.status(404).json({
+      success: false,
+      message: "Invalid email or password. If don't have account create first.",
+    });
   }
 
   // creating token
@@ -107,6 +110,7 @@ export const loginUser = async (req, res) => {
   }
   return res.status(200).json({
     success: true,
+    message: "Login successfull.",
     data: {
       userId: checkUser?._id,
       username: checkUser?.username,

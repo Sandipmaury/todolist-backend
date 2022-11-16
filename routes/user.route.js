@@ -5,9 +5,10 @@ import {
   registerUser,
 } from "../controllers/user.controller.js";
 import { gaurdMiddleware } from "../middleware/gaurd.middleware.js";
+import { userInputValidation } from "../middleware/userValidation.middleware.js";
 
 export const userRouter = Router();
 
 userRouter.post("/login", loginUser);
-userRouter.post("/register", registerUser);
+userRouter.post("/register", userInputValidation, registerUser);
 userRouter.get("/", gaurdMiddleware, getUser);
