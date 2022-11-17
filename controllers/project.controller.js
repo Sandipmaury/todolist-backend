@@ -1,3 +1,4 @@
+import moment from "moment";
 import { ProjectModel } from "../models/project.model.js";
 
 export const createProject = async (req, res) => {
@@ -49,6 +50,7 @@ export const getSingleProject = async (req, res) => {
 export const updateProject = async (req, res) => {
   const { id } = req.params;
   const project = req.body;
+  project.updatedAt = moment().format("MMMM Do YYYY, h:mm a");
   try {
     const updateProject = await ProjectModel.findByIdAndUpdate(
       id,

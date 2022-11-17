@@ -6,6 +6,7 @@ import { gaurdMiddleware } from "./middleware/gaurd.middleware.js";
 import { userRouter } from "./routes/user.route.js";
 import { projectRouter } from "./routes/project.route.js";
 import { taskRouter } from "./routes/task.route.js";
+import { feedbackRouter } from "./routes/feedback.route.js";
 dotenv.config();
 const PORT = process.env.PORT;
 
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/user", userRouter);
+app.use("/feedbacks", feedbackRouter);
 
 // gaurd middleware for checking is user validated or not
 app.use("/projects", gaurdMiddleware, projectRouter);

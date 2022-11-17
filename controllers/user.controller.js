@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
 import dotenv from "dotenv";
 import { UserModel } from "../models/user.model.js";
+import moment from "moment";
 dotenv.config();
 
 export const getUser = async (req, res) => {
@@ -93,6 +94,17 @@ export const loginUser = async (req, res) => {
       success: false,
       message: "Invalid email or password. If don't have account create first.",
     });
+  }
+
+  // update login time
+  try {
+    await UserModel.findByIdAndUpdate(
+      checkUser?._id,
+      { loginAt: moment().format("MMMM Do YYYY, h:mm a") },
+      { new: true }
+    );
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
   }
 
   // creating token

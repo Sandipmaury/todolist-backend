@@ -1,8 +1,8 @@
+import moment from "moment";
 import { TaskModel } from "../models/task.model.js";
 
 export const createTask = async (req, res) => {
   let task = req.body;
-
   const newTask = new TaskModel(task);
   try {
     task = await newTask.save();
@@ -52,6 +52,8 @@ export const getSingleTask = async (req, res) => {
 export const updateTask = async (req, res) => {
   const { id } = req.params;
   const task = req.body;
+
+  task.updatedAt = moment().format("MMMM Do YYYY, h:mm a");
   try {
     const updateTask = await TaskModel.findByIdAndUpdate(
       id,
