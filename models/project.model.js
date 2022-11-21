@@ -5,6 +5,7 @@ const projectSchema = new mongoose.Schema({
   title: { type: String, require: true },
   about: { type: String, require: true },
   userId: { type: String, require: true },
+  type: { type: String, default: "individual" },
   createdAt: {
     type: String,
     require: true,

@@ -7,6 +7,7 @@ dotenv.config();
 
 export const getUser = async (req, res) => {
   const { userId } = req.body;
+
   try {
     const user = await UserModel.findById(userId);
     return res.status(200).json({
@@ -130,4 +131,19 @@ export const loginUser = async (req, res) => {
     },
     token: token,
   });
+};
+
+export const searchTeam = async (req, res) => {
+  const { q } = req.query;
+
+  try {
+    let user = await UserModel.find({ username: q }).limit(5);
+
+    return res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (err) {
+    return res.status(408).json({ success: false, message: err.message });
+  }
 };
