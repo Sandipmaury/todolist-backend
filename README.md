@@ -36,7 +36,7 @@ graph TD;
 ![Logo](https://i.im.ge/2022/11/21/SaLg8G.todolist-dashboard2.png)
 ![Logo](https://i.im.ge/2022/11/21/SaLc9L.todolist-profile1.png)
 
-## 🔗 Collaborators Profile Links
+## 🔗 Profile Links
 
 | Collaborators | Github  | Linkedin  | Portfolio  |
 | - | - | - | - |
